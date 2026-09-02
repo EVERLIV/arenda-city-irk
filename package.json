@@ -2,6 +2,11 @@
   "name": "arenda-cty-web",
   "version": "0.1.0",
   "private": true,
+  "allowScripts": {
+    "eslint-visitor-keys": true,
+    "minimatch": true,
+    "unrs-resolver": true
+  },
   "scripts": {
     "dev": "next dev",
     "build": "next build",
