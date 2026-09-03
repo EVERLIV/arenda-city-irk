@@ -16,7 +16,7 @@ export default function CategoriesPage() {
   return (
     <>
       <section className="border-b border-border bg-white">
-        <div className="mx-auto max-w-[1320px] px-6 py-10 lg:py-12">
+        <div className="mx-auto max-w-[var(--content-width)] px-[var(--page-pad-x)] py-10 lg:py-12">
           <p className="mb-2 text-[11px] font-bold uppercase tracking-[0.14em] text-muted">
             Категории
           </p>
@@ -38,7 +38,7 @@ export default function CategoriesPage() {
       </section>
 
       <section className="bg-white py-8 lg:py-10">
-        <div className="mx-auto max-w-[1320px] px-6">
+        <div className="mx-auto max-w-[var(--content-width)] px-[var(--page-pad-x)]">
           <div className="grid gap-3 sm:grid-cols-2 xl:grid-cols-3">
             {categories.map((category) => (
               <Link

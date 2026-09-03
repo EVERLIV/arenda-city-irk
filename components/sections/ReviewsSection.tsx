@@ -105,7 +105,7 @@ export function ReviewsSection() {
 
   return (
     <section className="border-y border-border bg-white py-10 lg:py-12">
-      <div className="mx-auto max-w-[1320px] px-6">
+      <div className="mx-auto max-w-[var(--content-width)] px-[var(--page-pad-x)]">
         <div className="mb-5 flex flex-wrap items-end justify-between gap-3">
           <h2 className="text-xl font-extrabold tracking-tight text-ink sm:text-2xl">
             <span className="text-primary">Отзывы</span> клиентов

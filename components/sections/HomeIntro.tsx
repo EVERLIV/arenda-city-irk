@@ -55,7 +55,7 @@ export function HomeIntro({ objects }: { objects: ObjectRow[] }) {
 
   return (
     <section className="border-b border-border bg-white">
-      <div className="mx-auto max-w-[1320px] px-6 pb-8 pt-5">
+      <div className="mx-auto max-w-[var(--content-width)] px-[var(--page-pad-x)] pb-8 pt-5">
         <div className="mb-3 flex flex-wrap items-center justify-between gap-2">
           <p className="text-[13px] text-muted">
             <span className="font-semibold text-ink">{siteConfig.name}</span>

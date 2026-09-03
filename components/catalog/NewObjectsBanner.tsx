@@ -22,7 +22,7 @@ export function NewObjectsBanner({
 
   return (
     <section className="border-b border-border bg-white">
-      <div className="mx-auto max-w-[1320px] px-6 py-5">
+      <div className="mx-auto max-w-[var(--content-width)] px-[var(--page-pad-x)] py-5">
         <div className="mb-3 flex items-baseline justify-between gap-3">
           <h2 className="text-base font-extrabold tracking-tight text-ink sm:text-lg">
             Новые объекты

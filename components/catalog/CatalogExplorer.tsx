@@ -89,7 +89,7 @@ export function CatalogExplorer({
         onOpenMobile={mobileFilters.open}
       />
 
-      <div className="mx-auto max-w-[1320px] px-6 py-4">
+      <div className="mx-auto max-w-[var(--content-width)] px-[var(--page-pad-x)] py-4">
         <div className="mb-3 flex flex-wrap items-center justify-between gap-2">
           <ActiveFilterChips
             filters={filters}

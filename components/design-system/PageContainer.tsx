@@ -8,9 +8,9 @@ interface PageContainerProps {
 }
 
 const widths = {
-  default: "max-w-[90rem]",
+  default: "max-w-[var(--content-width)]",
   narrow: "max-w-3xl",
-  wide: "max-w-[100rem]",
+  wide: "max-w-[var(--content-width)]",
 };
 
 export function PageContainer({
@@ -20,7 +20,13 @@ export function PageContainer({
   size = "default",
 }: PageContainerProps) {
   return (
-    <Tag className={cn("mx-auto w-full px-6", widths[size], className)}>
+    <Tag
+      className={cn(
+        "mx-auto w-full px-[var(--page-pad-x)]",
+        widths[size],
+        className,
+      )}
+    >
       {children}
     </Tag>
   );

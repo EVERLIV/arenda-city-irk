@@ -44,7 +44,7 @@ const footerColumns = [
 export function Footer() {
   return (
     <footer className="mt-auto border-t border-border bg-[#17171a] text-white print:hidden">
-      <div className="mx-auto max-w-[1320px] px-6 py-14">
+      <div className="mx-auto max-w-[var(--content-width)] px-[var(--page-pad-x)] py-14">
         <div className="mb-12 flex flex-col gap-8 border-b border-white/10 pb-10 lg:flex-row lg:items-start lg:justify-between">
           <div>
             <div className="mb-4 flex items-center gap-3">

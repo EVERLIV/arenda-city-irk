@@ -107,7 +107,7 @@ export function AgencyHighlights() {
   return (
     <>
       <section className="border-y border-border bg-white py-6">
-        <div className="mx-auto flex max-w-[1320px] flex-col items-center gap-4 px-6 sm:flex-row sm:justify-between">
+        <div className="mx-auto flex max-w-[var(--content-width)] flex-col items-center gap-4 px-[var(--page-pad-x)] sm:flex-row sm:justify-between">
           <div className="flex items-center gap-3">
             <div className="flex -space-x-2.5">
               {faces.map((src, index) => (
@@ -131,7 +131,7 @@ export function AgencyHighlights() {
       </section>
 
       <section className="bg-surface py-10 lg:py-12">
-        <div className="mx-auto max-w-[1320px] px-6">
+        <div className="mx-auto max-w-[var(--content-width)] px-[var(--page-pad-x)]">
           <div className="mb-5 flex flex-wrap items-end justify-between gap-3">
             <div>
               <p className="mb-1 text-[11px] font-bold uppercase tracking-[0.14em] text-muted">
@@ -185,7 +185,7 @@ export function AgencyHighlights() {
       </section>
 
       <section className="border-y border-border bg-white py-10 lg:py-12">
-        <div className="mx-auto max-w-[1320px] px-6">
+        <div className="mx-auto max-w-[var(--content-width)] px-[var(--page-pad-x)]">
           <div className="mb-5">
             <p className="mb-1 text-[11px] font-bold uppercase tracking-[0.14em] text-muted">
               Услуги

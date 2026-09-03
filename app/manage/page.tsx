@@ -117,7 +117,7 @@ export default function ManagePage() {
   return (
     <>
       <section className="border-b border-border bg-white">
-        <div className="mx-auto max-w-[1320px] px-6 py-10 lg:py-12">
+        <div className="mx-auto max-w-[var(--content-width)] px-[var(--page-pad-x)] py-10 lg:py-12">
           <p className="mb-2 text-[11px] font-bold uppercase tracking-[0.14em] text-muted">
             Собственникам
           </p>
@@ -141,7 +141,7 @@ export default function ManagePage() {
       </section>
 
       <section className="border-b border-border bg-surface py-10">
-        <div className="mx-auto max-w-[1320px] px-6">
+        <div className="mx-auto max-w-[var(--content-width)] px-[var(--page-pad-x)]">
           <h2 className="mb-4 text-lg font-extrabold text-ink">Как проходит работа</h2>
           <ol className="grid gap-3 sm:grid-cols-2 xl:grid-cols-3">
             {STEPS.map((item) => (
@@ -158,7 +158,7 @@ export default function ManagePage() {
       </section>
 
       <section className="border-b border-border bg-white py-10">
-        <div className="mx-auto grid max-w-[1320px] gap-8 px-6 lg:grid-cols-2">
+        <div className="mx-auto grid max-w-[var(--content-width)] gap-8 px-[var(--page-pad-x)] lg:grid-cols-2">
           <div>
             <h2 className="mb-3 text-lg font-extrabold text-ink">Что делаем мы</h2>
             <ul className="space-y-1.5 text-[13px] text-muted">
@@ -185,7 +185,7 @@ export default function ManagePage() {
       </section>
 
       <section className="border-b border-border bg-white py-10">
-        <div className="mx-auto max-w-[1320px] px-6">
+        <div className="mx-auto max-w-[var(--content-width)] px-[var(--page-pad-x)]">
           <h2 className="mb-4 text-lg font-extrabold text-ink">Условия</h2>
           <div className="grid gap-3 sm:grid-cols-2 xl:grid-cols-3">
             {TERMS.map((item) => (
@@ -199,7 +199,7 @@ export default function ManagePage() {
       </section>
 
       <section className="border-b border-border bg-surface py-10">
-        <div className="mx-auto grid max-w-[1320px] gap-8 px-6 lg:grid-cols-[1fr_22rem] lg:items-start">
+        <div className="mx-auto grid max-w-[var(--content-width)] gap-8 px-[var(--page-pad-x)] lg:grid-cols-[1fr_22rem] lg:items-start">
           <div>
             <h2 className="mb-4 text-lg font-extrabold text-ink">Вопросы</h2>
             <div className="grid gap-3 sm:grid-cols-2">

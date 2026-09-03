@@ -48,7 +48,7 @@ export function Header() {
   return (
     <header ref={headerRef} className="sticky top-0 z-40 bg-white print:hidden">
       <div className="hidden border-b border-border lg:block">
-        <div className="mx-auto flex max-w-[90rem] items-center justify-between gap-6 px-6 py-2.5">
+        <div className="mx-auto flex max-w-[var(--content-width)] items-center justify-between gap-6 px-[var(--page-pad-x)] py-2.5">
           <nav className="flex flex-wrap items-center gap-x-5 gap-y-1">
             {topNav.map((item) => (
               <Link
@@ -77,7 +77,7 @@ export function Header() {
       </div>
 
       <div className="border-b border-border">
-        <div className="mx-auto flex max-w-[90rem] items-center justify-between gap-4 px-6 py-4">
+        <div className="mx-auto flex max-w-[var(--content-width)] items-center justify-between gap-4 px-[var(--page-pad-x)] py-4">
           <Link href="/" className="group flex items-center gap-3">
             <div className="flex h-11 w-11 items-center justify-center bg-primary text-lg font-extrabold tracking-tight text-white shadow-[0_10px_24px_-12px_rgba(200,16,46,0.8)] transition-transform group-hover:scale-[1.02]">
               АС
@@ -130,7 +130,7 @@ export function Header() {
       </div>
 
       {open && (
-        <div className="border-b border-border bg-white px-6 py-5 lg:hidden">
+        <div className="border-b border-border bg-white px-[var(--page-pad-x)] py-5 lg:hidden">
           <nav className="flex flex-col gap-3">
             {topNav.map((item) => (
               <Link

@@ -13,7 +13,7 @@ const faces = [
 export function TrustStrip() {
   return (
     <section className="border-y border-border bg-white py-8">
-      <div className="mx-auto flex max-w-[1320px] flex-col items-center gap-5 px-6 sm:flex-row sm:justify-between">
+      <div className="mx-auto flex max-w-[var(--content-width)] flex-col items-center gap-5 px-[var(--page-pad-x)] sm:flex-row sm:justify-between">
         <div className="flex items-center gap-3">
           <div className="flex -space-x-3">
             {faces.map((src, i) => (
@@ -54,7 +54,7 @@ export function StatsHero() {
         <div className="absolute inset-0 bg-gradient-to-r from-black/75 via-black/55 to-black/35" />
       </div>
 
-      <div className="relative mx-auto grid max-w-[1320px] gap-8 px-6 py-20 lg:grid-cols-[1.2fr_0.8fr] lg:items-end lg:py-24">
+      <div className="relative mx-auto grid max-w-[var(--content-width)] gap-8 px-[var(--page-pad-x)] py-20 lg:grid-cols-[1.2fr_0.8fr] lg:items-end lg:py-24">
         <div className="text-white">
           <p className="section-label mb-4 text-white/70">Подбор под задачу</p>
           <h2 className="max-w-2xl text-4xl font-extrabold tracking-tight lg:text-[3rem] lg:leading-[1.05]">

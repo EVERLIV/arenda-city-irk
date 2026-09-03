@@ -8,7 +8,7 @@ export function CategoryShowcase() {
 
   return (
     <section className="bg-surface py-16 lg:py-20">
-      <div className="mx-auto max-w-[1320px] px-6">
+      <div className="mx-auto max-w-[var(--content-width)] px-[var(--page-pad-x)]">
         <div className="mb-10 flex flex-col gap-4 lg:flex-row lg:items-end lg:justify-between">
           <div>
             <p className="section-label mb-3">Категории</p>

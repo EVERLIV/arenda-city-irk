@@ -144,7 +144,7 @@ export function CatalogFilterBar({
 
   return (
     <div className="catalog-filter-bar relative sticky top-[var(--site-header-offset)] z-20 -mt-px border-b border-border bg-white shadow-[0_-1px_0_0_#fff]">
-      <div className="mx-auto max-w-[1320px] space-y-2 bg-white px-6 py-2.5">
+      <div className="mx-auto max-w-[var(--content-width)] space-y-2 bg-white px-[var(--page-pad-x)] py-2.5">
         <div className="flex flex-wrap items-center gap-2">
           <label className="relative min-w-[12rem] flex-1">
             <span className="sr-only">Поиск по каталогу</span>

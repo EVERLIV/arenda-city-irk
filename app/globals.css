@@ -15,7 +15,8 @@
   --accent-gold: #c9a227;
   --accent-teal: #1a7a6d;
   --ink: #2b2b30;
-  --content-width: 90rem;
+  --content-width: 70rem; /* ~1120px — narrower main column on large screens */
+  --page-pad-x: 1.75rem; /* mobile: not flush to screen edges */
   --section-y: 5rem;
   --section-y-lg: 7rem;
   --ease-premium: cubic-bezier(0.22, 1, 0.36, 1);
@@ -25,10 +26,30 @@
   --site-header-offset: 4.875rem;
 }
 
+@media (min-width: 640px) {
+  :root {
+    --page-pad-x: 2.25rem;
+  }
+}
+
 @media (min-width: 1024px) {
   :root {
+    --page-pad-x: 3rem;
     --site-header-offset: 7.5rem;
   }
+}
+
+@media (min-width: 1280px) {
+  :root {
+    --page-pad-x: 4rem;
+  }
+}
+
+.page-wrap {
+  width: 100%;
+  max-width: var(--content-width);
+  margin-inline: auto;
+  padding-inline: var(--page-pad-x);
 }
 
 @theme inline {

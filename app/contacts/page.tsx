@@ -17,7 +17,7 @@ export default function ContactsPage() {
         description={`Работаем в ${siteConfig.region}. Позвоните, напишите или оставьте сообщение — ответим в рабочее время.`}
       />
 
-      <div className="mx-auto max-w-[90rem] px-6 py-14">
+      <div className="mx-auto max-w-[var(--content-width)] px-[var(--page-pad-x)] py-14">
         <div className="grid gap-8 lg:grid-cols-[0.9fr_1.1fr]">
           <div className="space-y-8 border border-border bg-surface p-6 lg:p-8">
             <div>

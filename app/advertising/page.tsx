@@ -27,7 +27,7 @@ export default function AdvertisingPage() {
           />
           <div className="absolute inset-0 bg-gradient-to-r from-black/80 via-black/60 to-black/35" />
         </div>
-        <div className="relative mx-auto max-w-[1320px] px-6 py-16 text-white lg:py-20">
+        <div className="relative mx-auto max-w-[var(--content-width)] px-[var(--page-pad-x)] py-16 text-white lg:py-20">
           <p className="section-label mb-3 text-white/65">Реклама</p>
           <h1 className="max-w-2xl text-4xl font-extrabold tracking-tight lg:text-[3rem] lg:leading-[1.05]">
             Наружная реклама на объектах агентства
@@ -38,7 +38,7 @@ export default function AdvertisingPage() {
         </div>
       </section>
 
-      <div className="mx-auto max-w-[1320px] px-6 py-14">
+      <div className="mx-auto max-w-[var(--content-width)] px-[var(--page-pad-x)] py-14">
         <div className="mb-14 grid gap-4 md:grid-cols-2 xl:grid-cols-4">
           {types.map((type) => (
             <Link

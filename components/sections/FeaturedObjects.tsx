@@ -19,7 +19,7 @@ export function FeaturedObjects({ objects }: { objects: ObjectRow[] }) {
 
   return (
     <section className="border-y border-border bg-white py-10 lg:py-12">
-      <div className="mx-auto max-w-[1320px] px-6">
+      <div className="mx-auto max-w-[var(--content-width)] px-[var(--page-pad-x)]">
         <div className="mb-5 flex flex-wrap items-end justify-between gap-3">
           <div>
             <p className="mb-1 text-[11px] font-bold uppercase tracking-[0.14em] text-muted">

@@ -59,7 +59,7 @@ export default function AboutPage() {
   return (
     <>
       <section className="border-b border-border bg-white">
-        <div className="mx-auto max-w-[1320px] px-6 py-10 lg:py-12">
+        <div className="mx-auto max-w-[var(--content-width)] px-[var(--page-pad-x)] py-10 lg:py-12">
           <p className="mb-2 text-[11px] font-bold uppercase tracking-[0.14em] text-muted">
             О компании
           </p>
@@ -76,7 +76,7 @@ export default function AboutPage() {
       </section>
 
       <section className="border-b border-border bg-surface py-8">
-        <div className="mx-auto grid max-w-[1320px] gap-4 px-6 sm:grid-cols-2 lg:grid-cols-4">
+        <div className="mx-auto grid max-w-[var(--content-width)] gap-4 px-[var(--page-pad-x)] sm:grid-cols-2 lg:grid-cols-4">
           {FACTS.map((item) => (
             <div key={item.label} className="border border-border bg-white p-4">
               <p className="text-sm font-extrabold text-ink">{item.value}</p>
@@ -89,7 +89,7 @@ export default function AboutPage() {
       </section>
 
       <section className="border-b border-border bg-white py-10">
-        <div className="mx-auto max-w-[1320px] px-6">
+        <div className="mx-auto max-w-[var(--content-width)] px-[var(--page-pad-x)]">
           <h2 className="mb-2 text-lg font-extrabold text-ink">Как работаем</h2>
           <p className="mb-5 max-w-2xl text-[13px] leading-relaxed text-muted">
             Каталог открыт: смотрите актуальные объекты агентства. Если нужен
@@ -110,7 +110,7 @@ export default function AboutPage() {
       </section>
 
       <section className="border-b border-border bg-white py-10">
-        <div className="mx-auto max-w-[1320px] px-6">
+        <div className="mx-auto max-w-[var(--content-width)] px-[var(--page-pad-x)]">
           <h2 className="mb-4 text-lg font-extrabold text-ink">Направления</h2>
           <div className="grid gap-3 sm:grid-cols-2 xl:grid-cols-3">
             {DIRECTIONS.map((item) => (
@@ -128,7 +128,7 @@ export default function AboutPage() {
       </section>
 
       <section className="border-b border-border bg-surface py-10">
-        <div className="mx-auto grid max-w-[1320px] gap-8 px-6 lg:grid-cols-2">
+        <div className="mx-auto grid max-w-[var(--content-width)] gap-8 px-[var(--page-pad-x)] lg:grid-cols-2">
           <div>
             <h2 className="mb-2 text-lg font-extrabold text-ink">Собственникам</h2>
             <p className="text-[13px] leading-relaxed text-muted">

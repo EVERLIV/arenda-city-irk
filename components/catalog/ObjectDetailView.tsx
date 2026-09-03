@@ -18,6 +18,11 @@ import {
 } from "@mantine/hooks";
 import { FeatureList } from "@/components/catalog/FeatureList";
 import { ObjectCardCompact } from "@/components/catalog/CatalogObjectCard";
+import {
+  ObjectLocationPanel,
+  ObjectQuestionsBanner,
+  ObjectRealtorBanner,
+} from "@/components/catalog/ObjectDetailPromos";
 import { ObjectShareBar } from "@/components/catalog/ObjectShareBar";
 import { CallbackDialog } from "@/components/forms/CallbackDialog";
 import { Reveal } from "@/components/motion/Reveal";
@@ -503,6 +508,25 @@ export function ObjectDetailView({
             </div>
           </Reveal>
         </aside>
+      </div>
+
+      <div className="mt-8 space-y-5">
+        <Reveal delay={100}>
+          <ObjectQuestionsBanner phoneHref={phoneHref} />
+        </Reveal>
+
+        <Reveal delay={140}>
+          <ObjectLocationPanel
+            address={headline.title}
+            mapsHref={mapsHref}
+            infrastructure={[...nearbyProjects, ...infrastructure]}
+            similarObjects={similarObjects}
+          />
+        </Reveal>
+
+        <Reveal delay={180}>
+          <ObjectRealtorBanner />
+        </Reveal>
       </div>
 
       {similarObjects.length > 0 && (

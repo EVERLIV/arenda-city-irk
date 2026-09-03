@@ -24,7 +24,7 @@ export default async function CatalogPage({
   return (
     <>
       <section className="border-b border-border bg-white">
-        <div className="mx-auto flex max-w-[1320px] flex-wrap items-end justify-between gap-3 px-6 py-5">
+        <div className="mx-auto flex max-w-[var(--content-width)] flex-wrap items-end justify-between gap-3 px-[var(--page-pad-x)] py-5">
           <div>
             <p className="text-[11px] font-bold uppercase tracking-[0.14em] text-muted">
               Каталог
@@ -49,7 +49,7 @@ export default async function CatalogPage({
       </section>
 
       {!configured && (
-        <div className="mx-auto max-w-[1320px] px-6 py-8">
+        <div className="mx-auto max-w-[var(--content-width)] px-[var(--page-pad-x)] py-8">
           <div className="border border-border bg-white p-5">
             <h2 className="text-base font-extrabold text-ink">Supabase не подключена</h2>
             <p className="mt-2 max-w-2xl text-[13px] leading-relaxed text-muted">
@@ -63,7 +63,7 @@ export default async function CatalogPage({
       )}
 
       {configured && error && (
-        <div className="mx-auto max-w-[1320px] px-6 py-8">
+        <div className="mx-auto max-w-[var(--content-width)] px-[var(--page-pad-x)] py-8">
           <div className="border border-primary/30 bg-primary-soft p-5">
             <h2 className="text-base font-extrabold text-ink">Ошибка загрузки</h2>
             <p className="mt-2 text-[13px] text-muted">{error}</p>
@@ -72,7 +72,7 @@ export default async function CatalogPage({
       )}
 
       {configured && !error && data.length === 0 && (
-        <div className="mx-auto max-w-[1320px] px-6 py-12 text-center">
+        <div className="mx-auto max-w-[var(--content-width)] px-[var(--page-pad-x)] py-12 text-center">
           <p className="text-[13px] text-muted">В каталоге пока нет объектов.</p>
           <Link
             href="/contacts"

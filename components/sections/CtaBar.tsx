@@ -4,7 +4,7 @@ import { CallbackDialog } from "@/components/forms/CallbackDialog";
 export function CtaBar() {
   return (
     <section className="contact-strip">
-      <div className="mx-auto flex max-w-[1320px] flex-col items-center justify-between gap-5 px-6 py-8 lg:flex-row">
+      <div className="mx-auto flex max-w-[var(--content-width)] flex-col items-center justify-between gap-5 px-[var(--page-pad-x)] py-8 lg:flex-row">
         <div>
           <p className="section-label mb-2">Связаться</p>
           <a
