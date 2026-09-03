@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { Check, Link2, Printer, Share2 } from "lucide-react";
 import { cn } from "@/lib/utils";
 
@@ -10,19 +10,19 @@ interface ObjectShareBarProps {
   className?: string;
 }
 
+function pageUrl() {
+  return typeof window !== "undefined" ? window.location.href : "";
+}
+
 export function ObjectShareBar({ title, text, className }: ObjectShareBarProps) {
-  const [url, setUrl] = useState("");
   const [copied, setCopied] = useState(false);
 
-  useEffect(() => {
-    setUrl(window.location.href);
-  }, []);
-
   async function handleShare() {
+    const url = pageUrl();
     const payload = {
       title,
       text: text ?? title,
-      url: url || window.location.href,
+      url,
     };
 
     if (typeof navigator !== "undefined" && "share" in navigator) {
@@ -35,12 +35,21 @@ export function ObjectShareBar({ title, text, className }: ObjectShareBarProps) 
     }
 
     try {
-      await navigator.clipboard.writeText(payload.url);
+      await navigator.clipboard.writeText(url);
       setCopied(true);
       window.setTimeout(() => setCopied(false), 2000);
     } catch {
       // ignore
     }
+  }
+
+  function handleTelegram() {
+    const url = pageUrl();
+    window.open(
+      `https://t.me/share/url?url=${encodeURIComponent(url)}&text=${encodeURIComponent(title)}`,
+      "_blank",
+      "noopener,noreferrer",
+    );
   }
 
   function handlePrint() {
@@ -60,17 +69,10 @@ export function ObjectShareBar({ title, text, className }: ObjectShareBarProps) 
         <Printer className="h-3.5 w-3.5" />
         Печать
       </button>
-      {url ? (
-        <a
-          href={`https://t.me/share/url?url=${encodeURIComponent(url)}&text=${encodeURIComponent(title)}`}
-          target="_blank"
-          rel="noopener noreferrer"
-          className={actionClass}
-        >
-          <Link2 className="h-3.5 w-3.5" />
-          Telegram
-        </a>
-      ) : null}
+      <button type="button" onClick={handleTelegram} className={actionClass}>
+        <Link2 className="h-3.5 w-3.5" />
+        Telegram
+      </button>
     </div>
   );
 }

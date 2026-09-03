@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { useIntersection } from "@mantine/hooks";
 import { cn } from "@/lib/utils";
 
@@ -17,11 +17,9 @@ export function Reveal({ children, className, delay = 0 }: RevealProps) {
   });
   const [visible, setVisible] = useState(false);
 
-  useEffect(() => {
-    if (entry?.isIntersecting) {
-      setVisible(true);
-    }
-  }, [entry]);
+  if (entry?.isIntersecting && !visible) {
+    setVisible(true);
+  }
 
   return (
     <div
