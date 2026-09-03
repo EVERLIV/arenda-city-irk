@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import { useDisclosure } from "@mantine/hooks";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
@@ -37,7 +38,7 @@ export function CallbackDialog({
   triggerSize = "default",
   triggerClassName,
 }: CallbackDialogProps) {
-  const [open, setOpen] = useState(false);
+  const [open, dialog] = useDisclosure(false);
   const [status, setStatus] = useState<"idle" | "loading" | "success" | "error">("idle");
   const [message, setMessage] = useState("");
 
@@ -70,7 +71,13 @@ export function CallbackDialog({
   }
 
   return (
-    <Dialog open={open} onOpenChange={setOpen}>
+    <Dialog
+      open={open}
+      onOpenChange={(next) => {
+        if (next) dialog.open();
+        else dialog.close();
+      }}
+    >
       <DialogTrigger asChild>
         <Button variant={triggerVariant} size={triggerSize} className={triggerClassName}>
           {triggerLabel}

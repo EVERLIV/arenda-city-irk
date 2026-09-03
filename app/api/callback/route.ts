@@ -4,13 +4,15 @@ import { z } from "zod";
 import { getTelephonyProvider } from "@/lib/telephony";
 
 const requestSchema = z.object({
-  type: z.enum(["callback", "contact", "advertising"]),
+  type: z.enum(["callback", "contact", "advertising", "manage"]),
   name: z.string().min(2),
   phone: z.string().min(10),
   email: z.string().email().optional().or(z.literal("")),
   message: z.string().optional(),
   adType: z.string().optional(),
   area: z.string().optional(),
+  objectType: z.string().optional(),
+  address: z.string().optional(),
 });
 
 const LEADS_FILE = path.join(process.cwd(), "data", "leads.json");

@@ -29,6 +29,7 @@ export interface CatalogFilters {
   areaMin: number | null;
   areaMax: number | null;
   query: string;
+  onlyNew: boolean;
 }
 
 export const DEFAULT_FILTERS: CatalogFilters = {
@@ -40,7 +41,10 @@ export const DEFAULT_FILTERS: CatalogFilters = {
   areaMin: null,
   areaMax: null,
   query: "",
+  onlyNew: false,
 };
+
+export const NEW_OBJECT_DAYS = 30;
 
 export const SORT_OPTIONS: { value: SortOption; label: string }[] = [
   { value: "date-desc", label: "Сначала новые" },
@@ -50,6 +54,56 @@ export const SORT_OPTIONS: { value: SortOption; label: string }[] = [
   { value: "area-asc", label: "Меньше площадь" },
   { value: "area-desc", label: "Больше площадь" },
 ];
+
+function readSearchParam(
+  source: URLSearchParams | Record<string, string | string[] | undefined>,
+  key: string,
+): string {
+  if (source instanceof URLSearchParams) return source.get(key) ?? "";
+  const value = source[key];
+  if (Array.isArray(value)) return value[0] ?? "";
+  return value ?? "";
+}
+
+export function filtersFromSearchParams(
+  source: URLSearchParams | Record<string, string | string[] | undefined>,
+): CatalogFilters {
+  const get = (key: string) => readSearchParam(source, key);
+  const num = (key: string) => {
+    const raw = get(key);
+    if (!raw) return null;
+    const parsed = Number(raw.replace(/\s/g, "").replace(",", "."));
+    return Number.isFinite(parsed) ? parsed : null;
+  };
+
+  return {
+    ...DEFAULT_FILTERS,
+    query: get("q"),
+    dealType: get("deal") || null,
+    type: get("type") || null,
+    district: get("district") || null,
+    priceMin: num("priceMin"),
+    priceMax: num("priceMax"),
+    areaMin: num("areaMin"),
+    areaMax: num("areaMax"),
+    onlyNew: get("new") === "1",
+  };
+}
+
+export function catalogSearchHref(filters: CatalogFilters): string {
+  const params = new URLSearchParams();
+  if (filters.query.trim()) params.set("q", filters.query.trim());
+  if (filters.dealType) params.set("deal", filters.dealType);
+  if (filters.type) params.set("type", filters.type);
+  if (filters.district) params.set("district", filters.district);
+  if (filters.priceMin != null) params.set("priceMin", String(filters.priceMin));
+  if (filters.priceMax != null) params.set("priceMax", String(filters.priceMax));
+  if (filters.areaMin != null) params.set("areaMin", String(filters.areaMin));
+  if (filters.areaMax != null) params.set("areaMax", String(filters.areaMax));
+  if (filters.onlyNew) params.set("new", "1");
+  const query = params.toString();
+  return query ? `/catalog?${query}` : "/catalog";
+}
 
 export function extractFilterOptions(objects: ObjectRow[]) {
   const dealTypes = new Set<string>();
@@ -105,7 +159,49 @@ export function countActiveFilters(filters: CatalogFilters): number {
   if (filters.areaMin != null) count += 1;
   if (filters.areaMax != null) count += 1;
   if (filters.query.trim()) count += 1;
+  if (filters.onlyNew) count += 1;
   return count;
+}
+
+export function isNewObject(
+  row: ObjectRow,
+  days = NEW_OBJECT_DAYS,
+): boolean {
+  const published = getObjectPublishedAt(row);
+  if (!published) return false;
+  return Date.now() - published < days * 86_400_000;
+}
+
+export function getNewestObjects(objects: ObjectRow[], limit = 5): ObjectRow[] {
+  return sortObjects(objects, "date-desc").slice(0, Math.min(limit, objects.length));
+}
+
+export function hasPublishDates(objects: ObjectRow[]): boolean {
+  return objects.some((object) => getObjectPublishedAt(object) > 0);
+}
+
+export type FacetKey = "type" | "dealType" | "district";
+
+export function countFacet(
+  objects: ObjectRow[],
+  filters: CatalogFilters,
+  facet: FacetKey,
+): Map<string, number> {
+  const base = filterObjects(objects, { ...filters, [facet]: null, onlyNew: filters.onlyNew });
+  const counts = new Map<string, number>();
+
+  for (const object of base) {
+    const key =
+      facet === "type"
+        ? getObjectType(object)
+        : facet === "dealType"
+          ? getObjectDealType(object)
+          : getObjectDistrict(object);
+    if (!key) continue;
+    counts.set(key, (counts.get(key) ?? 0) + 1);
+  }
+
+  return counts;
 }
 
 export function filterObjects(
@@ -142,6 +238,10 @@ export function filterObjects(
     }
 
     if (query && !getObjectSearchText(object).includes(query)) {
+      return false;
+    }
+
+    if (filters.onlyNew && !isNewObject(object)) {
       return false;
     }
 

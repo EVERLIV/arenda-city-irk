@@ -32,6 +32,7 @@ const footerColumns = [
     title: "Компания",
     links: [
       { href: "/catalog", label: "Каталог объектов" },
+      { href: "/manage", label: "Сдать объект в управление" },
       { href: "/about", label: "О компании" },
       { href: "/contacts", label: "Контакты" },
       { href: "/privacy", label: "Конфиденциальность" },
@@ -42,7 +43,7 @@ const footerColumns = [
 
 export function Footer() {
   return (
-    <footer className="mt-auto border-t border-border bg-[#17171a] text-white">
+    <footer className="mt-auto border-t border-border bg-[#17171a] text-white print:hidden">
       <div className="mx-auto max-w-[1320px] px-6 py-14">
         <div className="mb-12 flex flex-col gap-8 border-b border-white/10 pb-10 lg:flex-row lg:items-start lg:justify-between">
           <div>

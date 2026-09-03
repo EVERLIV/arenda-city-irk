@@ -1,15 +1,11 @@
 export function CatalogCardSkeleton() {
   return (
-    <div className="catalog-card-skeleton flex h-full flex-col overflow-hidden border border-border bg-white">
-      <div className="skeleton aspect-[5/3] w-full" />
-      <div className="space-y-3 border-t border-border p-4">
-        <div className="skeleton h-6 w-2/5 rounded-sm" />
-        <div className="skeleton h-4 w-full rounded-sm" />
-        <div className="skeleton h-4 w-4/5 rounded-sm" />
-        <div className="flex gap-2 pt-1">
-          <div className="skeleton h-3 w-16 rounded-sm" />
-          <div className="skeleton h-3 w-20 rounded-sm" />
-        </div>
+    <div className="flex h-full flex-col overflow-hidden border border-border bg-white">
+      <div className="skeleton aspect-[16/10] w-full" />
+      <div className="space-y-2 border-t border-border px-2.5 py-2">
+        <div className="skeleton h-4 w-2/5 rounded-sm" />
+        <div className="skeleton h-3 w-full rounded-sm" />
+        <div className="skeleton h-3 w-3/4 rounded-sm" />
       </div>
     </div>
   );
@@ -29,9 +25,9 @@ export function CatalogListSkeleton() {
   );
 }
 
-export function CatalogPageSkeleton({ count = 8 }: { count?: number }) {
+export function CatalogPageSkeleton({ count = 10 }: { count?: number }) {
   return (
-    <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-3 2xl:grid-cols-4">
+    <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-4 xl:grid-cols-5">
       {Array.from({ length: count }).map((_, index) => (
         <CatalogCardSkeleton key={index} />
       ))}
@@ -47,13 +43,28 @@ export function ObjectDetailSkeleton() {
         <div className="skeleton h-8 w-3/4 rounded-sm" />
         <div className="skeleton h-4 w-1/2 rounded-sm" />
       </div>
-      <div className="skeleton aspect-[16/10] w-full rounded-sm lg:min-h-[420px]" />
-      <div className="grid gap-6 xl:grid-cols-[minmax(0,1fr)_21rem]">
-        <div className="space-y-4">
-          <div className="skeleton h-48 w-full rounded-sm" />
-          <div className="skeleton h-32 w-full rounded-sm" />
+      <div className="grid gap-8 xl:grid-cols-[minmax(0,1fr)_21rem] xl:items-start">
+        <div>
+          <div className="skeleton h-[260px] w-full rounded-xl sm:h-[300px] lg:h-[340px]" />
+          <div className="space-y-4 border-t border-border pt-8">
+            <div className="skeleton h-6 w-40 rounded-sm" />
+            <div className="grid gap-4 sm:grid-cols-2">
+              {Array.from({ length: 6 }).map((_, i) => (
+                <div key={i} className="flex justify-between gap-3">
+                  <div className="skeleton h-4 w-24 rounded-sm" />
+                  <div className="skeleton h-4 w-20 rounded-sm" />
+                </div>
+              ))}
+            </div>
+          </div>
+          <div className="space-y-3 border-t border-border pt-8">
+            <div className="skeleton h-6 w-32 rounded-sm" />
+            <div className="skeleton h-4 w-full rounded-sm" />
+            <div className="skeleton h-4 w-5/6 rounded-sm" />
+            <div className="skeleton h-4 w-4/6 rounded-sm" />
+          </div>
         </div>
-        <div className="skeleton h-72 w-full rounded-sm" />
+        <div className="skeleton h-72 w-full rounded-xl" />
       </div>
     </div>
   );

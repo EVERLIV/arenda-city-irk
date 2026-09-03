@@ -1,209 +1,265 @@
-import Image from "next/image";
+"use client";
+
+import { useDeferredValue, useMemo, useState } from "react";
 import Link from "next/link";
-import { Play } from "lucide-react";
-import { siteConfig } from "@/lib/site-config";
+import { useRouter } from "next/navigation";
+import { Search } from "lucide-react";
+import { ObjectCardCompact } from "@/components/catalog/CatalogObjectCard";
 import { CallbackDialog } from "@/components/forms/CallbackDialog";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import {
+  catalogSearchHref,
+  countFacet,
+  DEFAULT_FILTERS,
+  extractFilterOptions,
+  filterObjects,
+  sortObjects,
+  type CatalogFilters,
+} from "@/lib/catalog/catalog-utils";
+import { siteConfig } from "@/lib/site-config";
+import { getObjectId, type ObjectRow } from "@/lib/supabase/objects";
+import { cn } from "@/lib/utils";
 
-const serviceGroups = [
-  {
-    title: "Каталог",
-    bullet: "bullet-red",
-    links: [
-      { href: "/catalog", label: "Все объекты" },
-      { href: "/categories", label: "Категории услуг" },
-      { href: "/contacts", label: "Заявка на подбор" },
-    ],
-  },
-  {
-    title: "Аренда",
-    bullet: "bullet-warm",
-    links: [
-      { href: "/categories/kommercheskaya", label: "Коммерческие помещения" },
-      { href: "/categories/ofisy", label: "Офисы и коворкинги" },
-      { href: "/categories/pavilony", label: "Павильоны и киоски" },
-      { href: "/categories/sklady", label: "Склады и логистика" },
-    ],
-  },
-  {
-    title: "Продажа",
-    bullet: "bullet-gold",
-    links: [
-      { href: "/categories/zemlya", label: "Земельные участки" },
-      { href: "/categories/kommercheskaya", label: "Торговые площади" },
-      { href: "/categories/biznes-centry", label: "Помещения в БЦ" },
-      { href: "/categories/ofisy", label: "Офисы с отделкой" },
-    ],
-  },
-  {
-    title: "Реклама",
-    bullet: "bullet-teal",
-    links: [
-      { href: "/advertising", label: "Наружная реклама на объектах" },
-      { href: "/advertising/billbordy", label: "Билборды 3×6" },
-      { href: "/advertising/fasady", label: "Баннеры на фасадах" },
-      { href: "/advertising/led-ekrany", label: "LED-экраны" },
-    ],
-  },
-];
+const PREVIEW_LIMIT = 8;
 
-const differentiators = [
-  "Работаем с коммерческой недвижимостью, а не с массовым каталогом квартир",
-  "Подбираем локации под бизнес-задачу, а не просто показываем объекты",
-  "Размещаем наружную рекламу на собственных и партнёрских площадках",
-  "AI-консультант и обратный звонок доступны в любое время",
-  "Персональный менеджер на каждую заявку",
-];
+export function HomeIntro({ objects }: { objects: ObjectRow[] }) {
+  const router = useRouter();
+  const [filters, setFilters] = useState<CatalogFilters>(DEFAULT_FILTERS);
+  const deferredQuery = useDeferredValue(filters.query);
 
-export function HomeIntro() {
-  return (
-    <section className="relative overflow-hidden">
-      <div className="mx-auto max-w-[1320px] px-6 pb-10 pt-10 lg:pb-14 lg:pt-12">
-        <div className="mb-8 hidden justify-end lg:flex">
-          <p className="editorial-quote max-w-sm text-right text-[15px] leading-relaxed">
-            «Любить своё дело — значит видеть в нём не только прибыль, но и
-            ответственность перед клиентом»
-          </p>
-        </div>
-
-        <div className="grid gap-10 xl:grid-cols-[minmax(0,1fr)_300px]">
-          <div>
-            <div className="relative grid gap-8 lg:grid-cols-[minmax(0,1.05fr)_minmax(0,0.95fr)] lg:items-start">
-              <div className="relative z-10">
-                <div className="mb-5 inline-flex items-center gap-2 text-sm text-ink">
-                  <span className="inline-block h-2.5 w-2.5 bg-primary" />
-                  <span className="font-medium">
-                    Агентство коммерческой недвижимости в Иркутске и области
-                  </span>
-                </div>
-
-                <h1 className="max-w-[11ch] text-[2.35rem] font-extrabold leading-[1.02] tracking-[-0.03em] text-ink sm:text-[3rem] lg:text-[3.45rem]">
-                  Ищете{" "}
-                  <span className="text-primary">недвижимость</span> для бизнеса
-                  — вы нашли больше
-                </h1>
-
-                <p className="mt-5 max-w-xl text-[1.02rem] leading-relaxed text-muted">
-                  Земля, офисы, павильоны, склады и коммерческие помещения.
-                  Подбираем категорию и формат под вашу задачу — без публичного
-                  каталога объектов.
-                </p>
-              </div>
-
-              <div className="relative min-h-[280px] lg:min-h-[360px]">
-                <div className="absolute inset-0 overflow-hidden bg-[#e9edf2]">
-                  <Image
-                    src="https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?w=1400&h=1000&fit=crop"
-                    alt="Коммерческая недвижимость"
-                    fill
-                    className="object-cover object-[center_30%]"
-                    priority
-                  />
-                </div>
-                <div className="absolute -bottom-5 -left-5 hidden h-28 w-28 border-4 border-white bg-primary/90 shadow-xl lg:block" />
-                <div className="absolute -right-3 top-8 hidden h-20 w-20 bg-accent-gold/90 shadow-lg lg:block" />
-              </div>
-            </div>
-
-            <div className="mt-12 grid gap-8 border-t border-border pt-10 sm:grid-cols-2 xl:grid-cols-4">
-              {serviceGroups.map((group) => (
-                <div key={group.title}>
-                  <h2 className="mb-4 text-[1.35rem] font-extrabold tracking-tight text-ink">
-                    {group.title}
-                  </h2>
-                  <ul className="space-y-2.5">
-                    {group.links.map((link) => (
-                      <li key={link.href + link.label}>
-                        <Link
-                          href={link.href}
-                          className={`service-link ${group.bullet}`}
-                        >
-                          {link.label}
-                        </Link>
-                      </li>
-                    ))}
-                  </ul>
-                </div>
-              ))}
-            </div>
-          </div>
-
-          <aside className="space-y-5 xl:pt-2">
-            <div className="video-card aspect-[4/3]">
-              <Image
-                src="https://images.unsplash.com/photo-1449824913935-59a10b8d2000?w=800&h=600&fit=crop"
-                alt="Городской пейзаж"
-                fill
-                className="object-cover"
-              />
-              <div className="play-btn">
-                <Play className="ml-0.5 h-5 w-5 fill-current" />
-              </div>
-              <div className="absolute bottom-3 left-3 z-[2] text-xs font-semibold uppercase tracking-[0.16em] text-white">
-                Аренда Сити сегодня
-              </div>
-            </div>
-
-            <div className="border border-border bg-surface p-5">
-              <h3 className="mb-4 text-sm font-extrabold uppercase tracking-[0.14em] text-ink">
-                Аренда Сити — это другое
-              </h3>
-              <ul className="space-y-3">
-                {differentiators.map((item) => (
-                  <li
-                    key={item}
-                    className="flex gap-3 text-[13px] leading-relaxed text-muted"
-                  >
-                    <span className="mt-2 h-1.5 w-1.5 shrink-0 rounded-full bg-primary/70" />
-                    {item}
-                  </li>
-                ))}
-              </ul>
-              <Link
-                href="/categories"
-                className="mt-5 inline-flex w-full items-center justify-center border border-border bg-white px-4 py-2.5 text-sm font-semibold text-ink transition-colors hover:border-primary/30 hover:text-primary"
-              >
-                Все услуги
-              </Link>
-            </div>
-          </aside>
-        </div>
-      </div>
-
-      <ContactStrip />
-    </section>
+  const options = useMemo(() => extractFilterOptions(objects), [objects]);
+  const typeCounts = useMemo(
+    () => countFacet(objects, filters, "type"),
+    [objects, filters],
   );
-}
 
-function ContactStrip() {
+  const matched = useMemo(
+    () =>
+      sortObjects(
+        filterObjects(objects, { ...filters, query: deferredQuery }),
+        "date-desc",
+      ),
+    [objects, filters, deferredQuery],
+  );
+  const visible = matched.slice(0, PREVIEW_LIMIT);
+  const catalogHref = catalogSearchHref(filters);
+
+  function update<K extends keyof CatalogFilters>(key: K, value: CatalogFilters[K]) {
+    setFilters((current) => ({ ...current, [key]: value }));
+  }
+
+  const dealTypes =
+    options.dealTypes.length > 0 ? options.dealTypes : ["Аренда", "Продажа"];
+  const types = options.types.filter((type) => (typeCounts.get(type) ?? 0) > 0);
+
   return (
-    <div className="contact-strip">
-      <div className="mx-auto grid max-w-[1320px] gap-6 px-6 py-7 lg:grid-cols-[1.1fr_auto_auto] lg:items-center">
-        <p className="editorial-quote max-w-md text-[15px] leading-relaxed">
-          Подскажите, с кем можно поговорить о помещении под магазин или офис в
-          проходной локации?
-        </p>
-
-        <div className="text-center lg:text-left">
+    <section className="border-b border-border bg-white">
+      <div className="mx-auto max-w-[1320px] px-6 pb-8 pt-5">
+        <div className="mb-3 flex flex-wrap items-center justify-between gap-2">
+          <p className="text-[13px] text-muted">
+            <span className="font-semibold text-ink">{siteConfig.name}</span>
+            <span className="mx-2 text-border">·</span>
+            {siteConfig.region}
+          </p>
           <a
             href={siteConfig.phoneHref}
-            className="text-[1.75rem] font-extrabold tracking-tight text-ink transition-colors hover:text-primary"
+            className="text-[13px] font-bold text-ink hover:text-primary"
           >
             {siteConfig.phone}
           </a>
-          <p className="mt-1 flex items-center justify-center gap-2 text-sm text-muted lg:justify-start">
-            <span className="inline-block h-2 w-2 rounded-full bg-emerald-500" />
-            {siteConfig.workingHoursFull}
-          </p>
         </div>
 
-        <div className="flex justify-center lg:justify-end">
+        <h1 className="text-xl font-extrabold tracking-tight text-ink sm:text-2xl">
+          Найти объект
+        </h1>
+
+        <form
+          className="mt-4 border border-border bg-white"
+          onSubmit={(event) => {
+            event.preventDefault();
+            router.push(catalogHref);
+          }}
+        >
+          <div className="grid gap-0 lg:grid-cols-[auto_11rem_12rem_minmax(0,1fr)_auto]">
+            <div className="flex border-b border-border lg:border-b-0 lg:border-r">
+              <button
+                type="button"
+                onClick={() => update("dealType", null)}
+                className={cn(
+                  "h-11 px-4 text-[13px] font-semibold",
+                  filters.dealType == null
+                    ? "bg-primary text-white"
+                    : "bg-white text-ink hover:bg-muted-bg",
+                )}
+              >
+                Все
+              </button>
+              {dealTypes.map((deal) => (
+                <button
+                  key={deal}
+                  type="button"
+                  onClick={() =>
+                    update("dealType", filters.dealType === deal ? null : deal)
+                  }
+                  className={cn(
+                    "h-11 border-l border-border px-4 text-[13px] font-semibold",
+                    filters.dealType === deal
+                      ? "bg-primary text-white"
+                      : "bg-white text-ink hover:bg-muted-bg",
+                  )}
+                >
+                  {deal}
+                </button>
+              ))}
+            </div>
+
+            <select
+              aria-label="Тип объекта"
+              value={filters.type ?? ""}
+              onChange={(event) => update("type", event.target.value || null)}
+              className="h-11 border-b border-border bg-white px-3 text-[13px] text-ink outline-none focus:border-primary lg:border-b-0 lg:border-r"
+            >
+              <option value="">Тип объекта</option>
+              {options.types.map((type) => (
+                <option key={type} value={type}>
+                  {type}
+                </option>
+              ))}
+            </select>
+
+            <select
+              aria-label="Район"
+              value={filters.district ?? ""}
+              onChange={(event) => update("district", event.target.value || null)}
+              className="h-11 border-b border-border bg-white px-3 text-[13px] text-ink outline-none focus:border-primary lg:border-b-0 lg:border-r"
+            >
+              <option value="">Район / город</option>
+              {options.districts.map((district) => (
+                <option key={district} value={district}>
+                  {district}
+                </option>
+              ))}
+            </select>
+
+            <label className="relative border-b border-border lg:border-b-0 lg:border-r">
+              <span className="sr-only">Поиск по адресу</span>
+              <Search className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted" />
+              <Input
+                value={filters.query}
+                onChange={(event) => update("query", event.target.value)}
+                placeholder="Адрес, район, кадастр…"
+                className="h-11 rounded-none border-0 pl-9 text-[13px] focus-visible:ring-0"
+              />
+            </label>
+
+            <Button
+              type="submit"
+              className="h-11 rounded-none px-6 text-[12px] font-bold uppercase tracking-[0.08em]"
+            >
+              Найти
+            </Button>
+          </div>
+        </form>
+
+        {types.length > 0 && (
+          <div className="mt-3 flex gap-2 overflow-x-auto pb-0.5 [-ms-overflow-style:none] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
+            <button
+              type="button"
+              onClick={() => update("type", null)}
+              className={cn(
+                "shrink-0 border px-2.5 py-1 text-[12px] font-semibold",
+                filters.type == null
+                  ? "border-primary bg-primary-soft text-ink"
+                  : "border-border text-muted hover:text-ink",
+              )}
+            >
+              Все типы
+            </button>
+            {types.map((type) => (
+              <button
+                key={type}
+                type="button"
+                onClick={() => update("type", filters.type === type ? null : type)}
+                className={cn(
+                  "shrink-0 border px-2.5 py-1 text-[12px] font-semibold",
+                  filters.type === type
+                    ? "border-primary bg-primary-soft text-ink"
+                    : "border-border text-muted hover:text-ink",
+                )}
+              >
+                {type}
+                <span className="ml-1.5 font-medium text-muted">
+                  {typeCounts.get(type)}
+                </span>
+              </button>
+            ))}
+          </div>
+        )}
+
+        <div className="mt-6 flex flex-wrap items-baseline justify-between gap-2">
+          <p className="text-[13px] text-muted">
+            {objects.length === 0 ? (
+              "Каталог скоро откроется"
+            ) : (
+              <>
+                <span className="font-bold text-ink">{matched.length}</span>
+                {matched.length === objects.length
+                  ? " объектов"
+                  : ` из ${objects.length}`}
+              </>
+            )}
+          </p>
+          <Link
+            href={catalogHref}
+            className="text-[11px] font-bold uppercase tracking-[0.12em] text-primary"
+          >
+            Весь каталог →
+          </Link>
+        </div>
+
+        {visible.length > 0 ? (
+          <div className="mt-4 grid grid-cols-1 gap-x-5 gap-y-6 sm:grid-cols-2 lg:grid-cols-4">
+            {visible.map((object, index) => (
+              <ObjectCardCompact
+                key={getObjectId(object) || String(index)}
+                object={object}
+              />
+            ))}
+          </div>
+        ) : objects.length > 0 ? (
+          <p className="mt-6 text-[13px] text-muted">
+            По этим условиям ничего нет. Сбросьте фильтр или откройте весь каталог.
+          </p>
+        ) : null}
+
+        {matched.length > PREVIEW_LIMIT && (
+          <div className="mt-5">
+            <Link
+              href={catalogHref}
+              className="inline-flex border border-border px-4 py-2 text-[12px] font-bold uppercase tracking-[0.08em] text-ink hover:border-primary/40 hover:text-primary"
+            >
+              Показать все {matched.length}
+            </Link>
+          </div>
+        )}
+
+        <div className="mt-6 flex flex-wrap items-center justify-between gap-3 border-t border-border pt-4">
+          <div>
+            <a
+              href={siteConfig.phoneHref}
+              className="text-lg font-extrabold tracking-tight text-ink hover:text-primary"
+            >
+              {siteConfig.phone}
+            </a>
+            <p className="text-[12px] text-muted">{siteConfig.workingHoursFull}</p>
+          </div>
           <CallbackDialog
             triggerLabel="Перезвоните мне"
-            triggerSize="lg"
-            triggerClassName="min-w-[220px] rounded-none px-8 font-bold uppercase tracking-[0.08em]"
+            triggerClassName="rounded-none px-5 font-bold uppercase tracking-[0.08em]"
           />
         </div>
       </div>
-    </div>
+    </section>
   );
 }

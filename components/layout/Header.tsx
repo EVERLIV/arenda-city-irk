@@ -1,8 +1,9 @@
 "use client";
 
 import Link from "next/link";
+import { useEffect, useRef } from "react";
 import { ChevronDown, Grid3X3, Menu, X } from "lucide-react";
-import { useState } from "react";
+import { useDisclosure } from "@mantine/hooks";
 import { siteConfig } from "@/lib/site-config";
 import { Button } from "@/components/ui/button";
 import { CallbackDialog } from "@/components/forms/CallbackDialog";
@@ -12,15 +13,40 @@ const topNav = [
   { href: "/catalog", label: "Каталог" },
   { href: "/categories", label: "Категории" },
   { href: "/advertising", label: "Реклама" },
+  { href: "/manage", label: "Сдать объект" },
   { href: "/about", label: "О компании" },
   { href: "/contacts", label: "Контакты" },
 ];
 
 export function Header() {
-  const [open, setOpen] = useState(false);
+  const [open, menu] = useDisclosure(false);
+  const headerRef = useRef<HTMLElement>(null);
+
+  useEffect(() => {
+    const el = headerRef.current;
+    if (!el) return;
+
+    const syncOffset = () => {
+      const height = Math.ceil(el.getBoundingClientRect().height);
+      document.documentElement.style.setProperty(
+        "--site-header-offset",
+        `${height}px`,
+      );
+    };
+
+    syncOffset();
+    const observer = new ResizeObserver(syncOffset);
+    observer.observe(el);
+    window.addEventListener("resize", syncOffset);
+
+    return () => {
+      observer.disconnect();
+      window.removeEventListener("resize", syncOffset);
+    };
+  }, [open]);
 
   return (
-    <header className="sticky top-0 z-40 bg-white/95 backdrop-blur-md">
+    <header ref={headerRef} className="sticky top-0 z-40 bg-white print:hidden">
       <div className="hidden border-b border-border lg:block">
         <div className="mx-auto flex max-w-[90rem] items-center justify-between gap-6 px-6 py-2.5">
           <nav className="flex flex-wrap items-center gap-x-5 gap-y-1">
@@ -94,7 +120,7 @@ export function Header() {
             <Button
               variant="outline"
               size="icon"
-              onClick={() => setOpen(!open)}
+              onClick={menu.toggle}
               aria-label="Меню"
             >
               {open ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
@@ -111,7 +137,7 @@ export function Header() {
                 key={item.label}
                 href={item.href}
                 className="text-sm font-medium text-ink"
-                onClick={() => setOpen(false)}
+                onClick={menu.close}
               >
                 {item.label}
               </Link>

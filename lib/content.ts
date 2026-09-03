@@ -42,6 +42,8 @@ export interface Category {
   benefits: string[];
   faq: CategoryFaq[];
   relatedSlugs: string[];
+  criteria: string[];
+  catalogKeywords: string[];
 }
 
 export interface AdvertisingType {
@@ -65,6 +67,14 @@ export function getRelatedCategories(slugs: string[]): Category[] {
   return slugs
     .map((slug) => getCategoryBySlug(slug))
     .filter((category): category is Category => Boolean(category));
+}
+
+export function matchesCategoryKeywords(
+  haystack: string,
+  keywords: string[],
+): boolean {
+  const text = haystack.toLowerCase();
+  return keywords.some((keyword) => text.includes(keyword.toLowerCase()));
 }
 
 export function getAdvertisingTypes(): AdvertisingType[] {

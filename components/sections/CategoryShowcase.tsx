@@ -13,7 +13,7 @@ export function CategoryShowcase() {
           <div>
             <p className="section-label mb-3">Категории</p>
             <h2 className="max-w-xl text-3xl font-extrabold tracking-tight text-ink lg:text-[2.6rem] lg:leading-[1.05]">
-              Недвижимость для бизнеса — без каталога объектов
+              Недвижимость для бизнеса — по направлениям
             </h2>
           </div>
           <Link

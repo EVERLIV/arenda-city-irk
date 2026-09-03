@@ -21,6 +21,14 @@
   --ease-premium: cubic-bezier(0.22, 1, 0.36, 1);
   --shadow-soft: 0 2px 8px rgba(28, 28, 30, 0.04), 0 12px 32px -16px rgba(28, 28, 30, 0.1);
   --shadow-hover: 0 8px 20px rgba(28, 28, 30, 0.06), 0 28px 56px -20px color-mix(in srgb, var(--primary) 22%, rgba(28, 28, 30, 0.14));
+  /* Fallback until Header measures itself; keep flush under sticky header */
+  --site-header-offset: 4.875rem;
+}
+
+@media (min-width: 1024px) {
+  :root {
+    --site-header-offset: 7.5rem;
+  }
 }
 
 @theme inline {
@@ -169,50 +177,37 @@ body {
   overflow: hidden;
   border: 1px solid var(--border);
   background: white;
-  box-shadow: var(--shadow-soft);
   transition:
-    transform 0.5s var(--ease-premium),
-    box-shadow 0.5s var(--ease-premium),
-    border-color 0.35s ease;
+    border-color 0.25s ease,
+    background-color 0.25s ease;
 }
 
 .catalog-card:hover {
-  transform: translateY(-6px);
-  border-color: color-mix(in srgb, var(--primary) 22%, var(--border));
-  box-shadow: var(--shadow-hover);
+  border-color: color-mix(in srgb, var(--primary) 35%, var(--border));
 }
 
 .catalog-card:hover img {
-  transform: scale(1.05);
+  transform: scale(1.03);
 }
 
 .catalog-list-item {
   border: 1px solid var(--border);
   background: white;
-  box-shadow: var(--shadow-soft);
-  transition:
-    transform 0.45s var(--ease-premium),
-    border-color 0.35s ease,
-    box-shadow 0.45s var(--ease-premium);
+  transition: border-color 0.25s ease;
 }
 
 .catalog-list-item:hover {
-  transform: translateY(-3px);
-  border-color: color-mix(in srgb, var(--primary) 22%, var(--border));
-  box-shadow: var(--shadow-hover);
+  border-color: color-mix(in srgb, var(--primary) 35%, var(--border));
 }
 
 .catalog-list-item:hover img {
-  transform: scale(1.04);
+  transform: scale(1.03);
 }
 
 .catalog-filters {
   position: sticky;
   top: 4.5rem;
   align-self: start;
-  max-height: calc(100vh - 5.5rem);
-  overflow-y: auto;
-  padding-right: 0.25rem;
 }
 
 .object-detail {
@@ -279,22 +274,6 @@ body {
   }
 }
 
-.feature-item {
-  box-shadow: var(--shadow-soft);
-  transition:
-    transform 0.4s var(--ease-premium),
-    box-shadow 0.4s var(--ease-premium),
-    border-color 0.3s ease,
-    background-color 0.3s ease;
-}
-
-.feature-item:hover {
-  transform: translateY(-2px);
-  border-color: color-mix(in srgb, var(--primary) 20%, var(--border));
-  background: color-mix(in srgb, var(--primary-soft) 35%, white);
-  box-shadow: var(--shadow-hover);
-}
-
 @media (prefers-reduced-motion: reduce) {
   .reveal,
   .stagger-item,
@@ -307,5 +286,31 @@ body {
     transition: none !important;
     opacity: 1 !important;
     transform: none !important;
+  }
+}
+
+@media print {
+  header,
+  footer,
+  .print\:hidden,
+  [data-print-hide] {
+    display: none !important;
+  }
+
+  body {
+    background: white !important;
+  }
+
+  .page-shell {
+    background: white !important;
+  }
+
+  .object-detail {
+    padding-bottom: 0 !important;
+  }
+
+  a {
+    text-decoration: none !important;
+    color: inherit !important;
   }
 }

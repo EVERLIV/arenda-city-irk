@@ -1,6 +1,7 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useState } from "react";
+import { useIntersection } from "@mantine/hooks";
 import { cn } from "@/lib/utils";
 
 interface RevealProps {
@@ -10,26 +11,17 @@ interface RevealProps {
 }
 
 export function Reveal({ children, className, delay = 0 }: RevealProps) {
-  const ref = useRef<HTMLDivElement>(null);
+  const { ref, entry } = useIntersection({
+    threshold: 0.12,
+    rootMargin: "0px 0px -32px 0px",
+  });
   const [visible, setVisible] = useState(false);
 
   useEffect(() => {
-    const element = ref.current;
-    if (!element) return;
-
-    const observer = new IntersectionObserver(
-      ([entry]) => {
-        if (entry.isIntersecting) {
-          setVisible(true);
-          observer.disconnect();
-        }
-      },
-      { threshold: 0.12, rootMargin: "0px 0px -32px 0px" },
-    );
-
-    observer.observe(element);
-    return () => observer.disconnect();
-  }, []);
+    if (entry?.isIntersecting) {
+      setVisible(true);
+    }
+  }, [entry]);
 
   return (
     <div

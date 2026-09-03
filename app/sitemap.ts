@@ -11,6 +11,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
     "/catalog",
     "/advertising",
     "/about",
+    "/manage",
     "/contacts",
     "/privacy",
     "/consent",

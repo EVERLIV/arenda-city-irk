@@ -1,13 +1,14 @@
 "use client";
 
 import { useMemo, useState } from "react";
-import Link from "next/link";
-import { LayoutGrid, List, SlidersHorizontal } from "lucide-react";
+import { LayoutGrid, List } from "lucide-react";
+import { useDisclosure } from "@mantine/hooks";
 import {
   ActiveFilterChips,
-  CatalogFiltersPanel,
+  CatalogFilterBar,
   CatalogMobileFilters,
 } from "@/components/catalog/CatalogFilters";
+import { NewObjectsBanner } from "@/components/catalog/NewObjectsBanner";
 import {
   ObjectCardCompact,
   ObjectListItem,
@@ -15,37 +16,42 @@ import {
 import { Button } from "@/components/ui/button";
 import {
   countActiveFilters,
+  countFacet,
   DEFAULT_FILTERS,
   extractFilterOptions,
   filterObjects,
+  hasPublishDates,
   SORT_OPTIONS,
   sortObjects,
   type CatalogFilters,
   type SortOption,
   type ViewMode,
 } from "@/lib/catalog/catalog-utils";
-import {
-  formatPrice,
-  getObjectDealType,
-  getObjectId,
-  getObjectPrice,
-  type ObjectRow,
-} from "@/lib/supabase/objects";
+import { getObjectId, type ObjectRow } from "@/lib/supabase/objects";
 import { cn } from "@/lib/utils";
-import { Reveal } from "@/components/motion/Reveal";
-import { StaggerItem } from "@/components/motion/StaggerItem";
 
-interface CatalogExplorerProps {
+export function CatalogExplorer({
+  objects,
+  initialFilters = DEFAULT_FILTERS,
+}: {
   objects: ObjectRow[];
-}
-
-export function CatalogExplorer({ objects }: CatalogExplorerProps) {
-  const [filters, setFilters] = useState<CatalogFilters>(DEFAULT_FILTERS);
+  initialFilters?: CatalogFilters;
+}) {
+  const [filters, setFilters] = useState<CatalogFilters>(initialFilters);
   const [sort, setSort] = useState<SortOption>("date-desc");
   const [view, setView] = useState<ViewMode>("grid");
-  const [mobileFiltersOpen, setMobileFiltersOpen] = useState(false);
+  const [mobileFiltersOpen, mobileFilters] = useDisclosure(false);
 
   const options = useMemo(() => extractFilterOptions(objects), [objects]);
+  const hasDates = useMemo(() => hasPublishDates(objects), [objects]);
+  const typeCounts = useMemo(
+    () => countFacet(objects, filters, "type"),
+    [objects, filters],
+  );
+  const dealCounts = useMemo(
+    () => countFacet(objects, filters, "dealType"),
+    [objects, filters],
+  );
 
   const filtered = useMemo(
     () => sortObjects(filterObjects(objects, filters), sort),
@@ -53,73 +59,45 @@ export function CatalogExplorer({ objects }: CatalogExplorerProps) {
   );
 
   const activeFilters = countActiveFilters(filters);
-  const minPrice = useMemo(() => {
-    const prices = objects
-      .map((object) => getObjectPrice(object))
-      .filter((value): value is number => value != null);
-    return prices.length ? Math.min(...prices) : null;
-  }, [objects]);
 
   function resetFilters() {
     setFilters(DEFAULT_FILTERS);
   }
 
-  const listKey = `${view}-${sort}-${activeFilters}-${filters.query}-${filtered.length}`;
-
   return (
-    <div className="catalog-explorer">
-      <div className="mb-6 grid gap-3 sm:grid-cols-3">
-        <Reveal className="border border-border bg-white px-4 py-3 shadow-[var(--shadow-soft)]">
-          <p className="text-[11px] font-bold uppercase tracking-[0.14em] text-muted">
-            Объектов
-          </p>
-          <p className="mt-1 text-2xl font-extrabold text-ink">{objects.length}</p>
-        </Reveal>
-        <Reveal delay={80} className="border border-border bg-white px-4 py-3 shadow-[var(--shadow-soft)]">
-          <p className="text-[11px] font-bold uppercase tracking-[0.14em] text-muted">
-            Минимальная цена
-          </p>
-          <p className="mt-1 text-2xl font-extrabold text-primary">
-            {formatPrice(minPrice, getObjectDealType(objects[0] ?? {}))}
-          </p>
-        </Reveal>
-        <Reveal delay={160} className="border border-border bg-white px-4 py-3 shadow-[var(--shadow-soft)]">
-          <p className="text-[11px] font-bold uppercase tracking-[0.14em] text-muted">
-            Локации
-          </p>
-          <p className="mt-1 text-2xl font-extrabold text-ink">
-            {options.districts.length}
-          </p>
-        </Reveal>
-      </div>
+    <div>
+      <NewObjectsBanner
+        objects={objects}
+        onShowNew={
+          hasDates
+            ? () => setFilters((current) => ({ ...current, onlyNew: true }))
+            : undefined
+        }
+      />
 
-      <div className="sticky top-0 z-30 -mx-6 border-y border-border bg-white/95 px-6 py-3 backdrop-blur-md lg:top-0">
-        <div className="flex flex-wrap items-center justify-between gap-3">
-          <div className="flex items-center gap-2">
-            <Button
-              variant="outline"
-              size="sm"
-              className="rounded-none lg:hidden"
-              onClick={() => setMobileFiltersOpen(true)}
-            >
-              <SlidersHorizontal className="h-4 w-4" />
-              Фильтры
-              {activeFilters > 0 && (
-                <span className="ml-1 bg-primary px-1.5 py-0.5 text-[10px] text-white">
-                  {activeFilters}
-                </span>
-              )}
-            </Button>
-            <p className="text-sm text-muted">
-              Найдено:{" "}
-              <strong className="text-ink">{filtered.length}</strong>
-              {filtered.length !== objects.length && (
-                <span> из {objects.length}</span>
-              )}
-            </p>
-          </div>
+      <CatalogFilterBar
+        filters={filters}
+        options={options}
+        typeCounts={typeCounts}
+        dealCounts={dealCounts}
+        hasDates={hasDates}
+        resultCount={filtered.length}
+        totalCount={objects.length}
+        activeCount={activeFilters}
+        onChange={setFilters}
+        onReset={resetFilters}
+        onOpenMobile={mobileFilters.open}
+      />
 
-          <div className="flex flex-wrap items-center gap-2">
+      <div className="mx-auto max-w-[1320px] px-6 py-4">
+        <div className="mb-3 flex flex-wrap items-center justify-between gap-2">
+          <ActiveFilterChips
+            filters={filters}
+            onChange={setFilters}
+            onReset={resetFilters}
+            className="lg:hidden"
+          />
+          <div className="ml-auto flex items-center gap-2">
             <label className="sr-only" htmlFor="catalog-sort">
               Сортировка
             </label>
@@ -127,7 +105,7 @@ export function CatalogExplorer({ objects }: CatalogExplorerProps) {
               id="catalog-sort"
               value={sort}
               onChange={(event) => setSort(event.target.value as SortOption)}
-              className="h-9 border border-border bg-white px-3 text-sm font-semibold text-ink outline-none focus:border-primary"
+              className="h-8 border border-border bg-white px-2 text-[12px] font-semibold text-ink outline-none focus:border-primary"
             >
               {SORT_OPTIONS.map((option) => (
                 <option key={option.value} value={option.value}>
@@ -135,108 +113,72 @@ export function CatalogExplorer({ objects }: CatalogExplorerProps) {
                 </option>
               ))}
             </select>
-
             <div className="flex border border-border">
               <button
                 type="button"
                 aria-label="Сетка"
                 onClick={() => setView("grid")}
                 className={cn(
-                  "flex h-9 w-9 items-center justify-center transition-colors",
-                  view === "grid"
-                    ? "bg-primary text-white"
-                    : "bg-white text-ink hover:bg-muted-bg",
+                  "flex h-8 w-8 items-center justify-center",
+                  view === "grid" ? "bg-primary text-white" : "bg-white text-ink hover:bg-muted-bg",
                 )}
               >
-                <LayoutGrid className="h-4 w-4" />
+                <LayoutGrid className="h-3.5 w-3.5" />
               </button>
               <button
                 type="button"
                 aria-label="Список"
                 onClick={() => setView("list")}
                 className={cn(
-                  "flex h-9 w-9 items-center justify-center border-l border-border transition-colors",
-                  view === "list"
-                    ? "bg-primary text-white"
-                    : "bg-white text-ink hover:bg-muted-bg",
+                  "flex h-8 w-8 items-center justify-center border-l border-border",
+                  view === "list" ? "bg-primary text-white" : "bg-white text-ink hover:bg-muted-bg",
                 )}
               >
-                <List className="h-4 w-4" />
+                <List className="h-3.5 w-3.5" />
               </button>
             </div>
-
-            <Link
-              href="/contacts"
-              className="hidden text-xs font-bold uppercase tracking-[0.12em] text-primary sm:inline-flex"
-            >
-              Заявка на подбор
-            </Link>
           </div>
         </div>
-      </div>
 
-      <div className="mt-5">
-        <ActiveFilterChips
-          filters={filters}
-          onChange={setFilters}
-          onReset={resetFilters}
-        />
-      </div>
-
-      <div className="mt-6 grid gap-8 lg:grid-cols-[17rem_minmax(0,1fr)] xl:grid-cols-[18rem_minmax(0,1fr)]">
-        <CatalogFiltersPanel
-          filters={filters}
-          options={options}
-          onChange={setFilters}
-          onReset={resetFilters}
-          className="hidden lg:block"
-        />
-
-        <div>
-          {filtered.length === 0 ? (
-            <div className="border border-border bg-surface px-6 py-16 text-center">
-              <p className="text-lg font-extrabold text-ink">
-                По вашему запросу ничего не найдено
-              </p>
-              <p className="mt-2 text-sm text-muted">
-                Попробуйте изменить фильтры или сбросить параметры поиска.
-              </p>
-              <Button
-                variant="outline"
-                className="mt-6 rounded-none"
-                onClick={resetFilters}
-              >
-                Сбросить фильтры
-              </Button>
-            </div>
-          ) : view === "grid" ? (
-            <div
-              key={listKey}
-              className="grid gap-4 sm:grid-cols-2 xl:grid-cols-3 2xl:grid-cols-4"
-            >
-              {filtered.map((object, index) => (
-                <StaggerItem key={getObjectId(object) || String(index)} index={index}>
-                  <ObjectCardCompact object={object} />
-                </StaggerItem>
-              ))}
-            </div>
-          ) : (
-            <div key={listKey} className="space-y-3">
-              {filtered.map((object, index) => (
-                <StaggerItem key={getObjectId(object) || String(index)} index={index}>
-                  <ObjectListItem object={object} />
-                </StaggerItem>
-              ))}
-            </div>
-          )}
-        </div>
+        {filtered.length === 0 ? (
+          <div className="border border-border bg-white px-5 py-12 text-center">
+            <p className="text-sm font-extrabold text-ink">Ничего не найдено</p>
+            <p className="mt-1 text-[13px] text-muted">
+              Измените фильтры или сбросьте параметры поиска.
+            </p>
+            <Button variant="outline" className="mt-4 h-9 rounded-none" onClick={resetFilters}>
+              Сбросить фильтры
+            </Button>
+          </div>
+        ) : view === "grid" ? (
+          <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-4 xl:grid-cols-5">
+            {filtered.map((object, index) => (
+              <ObjectCardCompact
+                key={getObjectId(object) || String(index)}
+                object={object}
+              />
+            ))}
+          </div>
+        ) : (
+          <div className="space-y-2">
+            {filtered.map((object, index) => (
+              <ObjectListItem
+                key={getObjectId(object) || String(index)}
+                object={object}
+              />
+            ))}
+          </div>
+        )}
       </div>
 
       <CatalogMobileFilters
         open={mobileFiltersOpen}
-        onClose={() => setMobileFiltersOpen(false)}
+        onClose={mobileFilters.close}
         filters={filters}
         options={options}
+        typeCounts={typeCounts}
+        hasDates={hasDates}
+        resultCount={filtered.length}
         onChange={setFilters}
         onReset={resetFilters}
       />

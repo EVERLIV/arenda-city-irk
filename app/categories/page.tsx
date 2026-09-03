@@ -2,13 +2,12 @@ import type { Metadata } from "next";
 import Image from "next/image";
 import Link from "next/link";
 import { getCategories } from "@/lib/content";
-import { PageHero } from "@/components/layout/PageHero";
-import { ArrowUpRight } from "lucide-react";
+import { CtaBar } from "@/components/sections/CtaBar";
 
 export const metadata: Metadata = {
   title: "Категории недвижимости",
   description:
-    "Категории коммерческой недвижимости: земля, офисы, павильоны, склады, бизнес-центры.",
+    "Земля, коммерция, офисы, павильоны, склады и бизнес-центры в Иркутске и области. Каталог агентства и персональный подбор.",
 };
 
 export default function CategoriesPage() {
@@ -16,46 +15,61 @@ export default function CategoriesPage() {
 
   return (
     <>
-      <PageHero
-        eyebrow="Категории"
-        title="Недвижимость для бизнеса без открытого каталога"
-        description="Мы работаем с категориями коммерческой недвижимости и подбираем решения под вашу задачу. Оставьте заявку — специалист свяжется с вами."
-      />
-      <div className="mx-auto max-w-[1320px] px-6 py-14">
-        <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-3">
-          {categories.map((category, index) => (
-            <Link
-              key={category.slug}
-              href={`/categories/${category.slug}`}
-              className="category-tile group grid min-h-[240px] grid-rows-[1fr_auto]"
-            >
-              <div className="relative min-h-[160px] overflow-hidden">
-                <Image
-                  src={category.image}
-                  alt={category.title}
-                  fill
-                  className="object-cover transition-transform duration-500 group-hover:scale-105"
-                />
-                <div className="absolute inset-0 bg-gradient-to-t from-black/55 via-black/10 to-transparent" />
-                <span className="absolute left-4 top-4 text-[11px] font-bold uppercase tracking-[0.18em] text-white/85">
-                  {String(index + 1).padStart(2, "0")}
-                </span>
-              </div>
-              <div className="flex items-start justify-between gap-4 p-5">
-                <div>
-                  <h2 className="text-lg font-extrabold tracking-tight text-ink">
-                    {category.title}
-                  </h2>
-                  <p className="mt-2 text-sm leading-relaxed text-muted">
-                    {category.shortDescription}
+      <section className="border-b border-border bg-white">
+        <div className="mx-auto max-w-[1320px] px-6 py-10 lg:py-12">
+          <p className="mb-2 text-[11px] font-bold uppercase tracking-[0.14em] text-muted">
+            Категории
+          </p>
+          <h1 className="max-w-3xl text-2xl font-extrabold tracking-tight text-ink sm:text-3xl lg:text-[2.4rem] lg:leading-[1.08]">
+            Недвижимость для бизнеса —{" "}
+            <span className="text-primary">по направлениям</span>
+          </h1>
+          <p className="mt-3 max-w-2xl text-[15px] leading-relaxed text-muted">
+            Шесть категорий: от земли и складов до офисов и павильонов. Часть
+            объектов уже в каталоге, остальное подбираем после заявки.
+          </p>
+          <Link
+            href="/catalog"
+            className="mt-4 inline-block text-xs font-bold uppercase tracking-[0.12em] text-primary"
+          >
+            Открыть каталог →
+          </Link>
+        </div>
+      </section>
+
+      <section className="bg-white py-8 lg:py-10">
+        <div className="mx-auto max-w-[1320px] px-6">
+          <div className="grid gap-3 sm:grid-cols-2 xl:grid-cols-3">
+            {categories.map((category) => (
+              <Link
+                key={category.slug}
+                href={`/categories/${category.slug}`}
+                className="group grid grid-rows-[140px_auto] border border-border bg-white transition-colors hover:border-primary/40"
+              >
+                <div className="relative overflow-hidden bg-muted-bg">
+                  <Image
+                    src={category.image}
+                    alt={category.title}
+                    fill
+                    className="object-cover transition-transform duration-500 group-hover:scale-[1.03]"
+                  />
+                </div>
+                <div className="p-4">
+                  <h2 className="text-sm font-extrabold text-ink">{category.title}</h2>
+                  <p className="mt-1.5 text-[13px] leading-relaxed text-muted">
+                    {category.description}
+                  </p>
+                  <p className="mt-3 text-[11px] font-bold uppercase tracking-[0.12em] text-primary">
+                    Подробнее
                   </p>
                 </div>
-                <ArrowUpRight className="mt-1 h-5 w-5 shrink-0 text-primary opacity-0 transition-all group-hover:opacity-100" />
-              </div>
-            </Link>
-          ))}
+              </Link>
+            ))}
+          </div>
         </div>
-      </div>
+      </section>
+
+      <CtaBar />
     </>
   );
 }
