@@ -18,6 +18,9 @@
   "dependencies": {
     "@ai-sdk/openai": "^4.0.56",
     "@ai-sdk/react": "^4.0.93",
+    "@emnapi/core": "1.10.0",
+    "@emnapi/runtime": "1.11.3",
+    "@emnapi/wasi-threads": "1.2.3",
     "@hookform/resolvers": "^5.9.1",
     "@mantine/hooks": "^9.6.0",
     "@radix-ui/react-dialog": "^1.1.23",
@@ -47,10 +50,5 @@
     "eslint-config-next": "16.3.4",
     "tailwindcss": "^4",
     "typescript": "^5"
-  },
-  "optionalDependencies": {
-    "@emnapi/core": "^1.10.0",
-    "@emnapi/runtime": "1.11.3",
-    "@emnapi/wasi-threads": "^1.2.3"
   }
 }
