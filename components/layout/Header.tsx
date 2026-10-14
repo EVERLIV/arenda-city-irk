@@ -4,6 +4,7 @@ import Link from "next/link";
 import { useEffect, useRef } from "react";
 import { ChevronDown, Grid3X3, Menu, X } from "lucide-react";
 import { useDisclosure } from "@mantine/hooks";
+import { BrandLogo } from "@/components/brand/BrandLogo";
 import { siteConfig } from "@/lib/site-config";
 import { Button } from "@/components/ui/button";
 import { CallbackDialog } from "@/components/forms/CallbackDialog";
@@ -78,19 +79,7 @@ export function Header() {
 
       <div className="border-b border-border">
         <div className="mx-auto flex max-w-[var(--content-width)] items-center justify-between gap-4 px-[var(--page-pad-x)] py-4">
-          <Link href="/" className="group flex items-center gap-3">
-            <div className="flex h-11 w-11 items-center justify-center bg-primary text-lg font-extrabold tracking-tight text-white shadow-[0_10px_24px_-12px_rgba(200,16,46,0.8)] transition-transform group-hover:scale-[1.02]">
-              АС
-            </div>
-            <div className="hidden sm:block">
-              <div className="text-[1.05rem] font-extrabold tracking-tight text-ink">
-                {siteConfig.name}
-              </div>
-              <div className="text-[11px] font-medium uppercase tracking-[0.18em] text-muted">
-                Коммерческая недвижимость
-              </div>
-            </div>
-          </Link>
+          <BrandLogo />
 
           <div className="hidden items-center gap-5 lg:flex">
             <Link
